@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                     petMessage = "오늘도 같이 공부해요! 😊",
                     
                     normalTickets = 3,
-                    energyCount = 4, // 번개 4개 중 3개 활성화 등 시각화용
+                    energyCount = 5, // 에너지 5개 만점
                     
                     srBonus = 5,
                     gachaDescription = "레전드 확률 4% (Lv.7)",

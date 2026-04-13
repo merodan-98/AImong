@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <solid android:color="#1A2B52" />
-    <corners android:radius="16dp" />
-    <stroke android:width="2dp" android:color="#3A86FF" /> <!-- 퀘스트 전용 파란 외곽선 -->
+    <corners android:radius="20dp" />
+    <stroke android:width="2.5dp" android:color="#3A86FF" />
 </shape>

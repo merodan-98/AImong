@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
                 if (userRole == "CHILD") {
                     binding.bottomNav.visibility = View.VISIBLE
                     binding.bottomNav.setupWithNavController(navController)
+                    
+                    // 네비게이션 아이콘 컬러 문제 해결: 틴트를 null로 설정하고 모든 상태에서 컬러 유지
+                    binding.bottomNav.itemIconTintList = null
                 } else {
                     binding.bottomNav.visibility = View.GONE
                 }

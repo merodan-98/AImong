@@ -8,6 +8,7 @@
     <color name="black">#000000</color>
 
     <!-- 홈 화면 (시안 v1.3) 전용 다크 테마 색상 -->
+    <color name="home_card_stroke">#3A538C</color> <!-- 더 밝은 외곽선 색상 -->
     <color name="home_bg">#0A1633</color>
     <color name="home_card_bg">#1A2B52</color>
     <color name="home_card_bg_active">#243B70</color>

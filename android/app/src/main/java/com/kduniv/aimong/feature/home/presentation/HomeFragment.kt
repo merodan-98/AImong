@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.kduniv.aimong.R
 import com.kduniv.aimong.core.ui.BaseFragment
 import com.kduniv.aimong.databinding.FragmentHomeBinding
 import com.kduniv.aimong.databinding.ItemHomeQuestBinding
@@ -28,7 +29,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    updateUi(state)
+                    binding.root.post { // 뷰가 완전히 그려진 후 업데이트 보장
+                        updateUi(state)
+                    }
                 }
             }
         }
@@ -36,9 +39,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun updateUi(state: HomeUiState) {
         with(binding) {
-            // 1. 상단 상태바 (시안 v1.3)
-            tvStreakBadge.text = "🔥 ${state.streakDays}일 연속!"
-            tvLevelBadge.text = "🔍 Lv.${state.userLevel} ${viewModel.getProfileLabel(state.profileType)}"
+            // 1. 상단 상태바 (듀오링고 스타일: 이모지 + 숫자만 표시)
+            tvStreakCount.text = "🔥 ${state.streakDays}"
+            tvUserLevel.text = "🔍 Lv.${state.userLevel} ${viewModel.getProfileLabel(state.profileType)}"
+            tvEnergyCount.text = "⚡ ${state.energyCount}"
+            tvTicketCount.text = "🎟 ${state.normalTickets}"
             
             // 2. 캐릭터 및 메시지
             tvPetMessage.text = state.petMessage
@@ -67,16 +72,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.layoutQuestList.removeAllViews()
         val inflater = LayoutInflater.from(requireContext())
         
-        quests.forEach { quest ->
+        quests.forEachIndexed { index, quest ->
             val itemBinding = ItemHomeQuestBinding.inflate(inflater, binding.layoutQuestList, false)
             with(itemBinding) {
                 tvQuestTitle.text = quest.title
                 tvQuestReward.text = quest.rewardSummary
                 
+                // 1. 시안과 동일한 이모지 및 유색 배경 설정
+                when(index % 3) {
+                    0 -> {
+                        tvQuestEmoji.text = "🎒"
+                        tvQuestEmoji.setBackgroundResource(R.drawable.bg_quest_icon_purple)
+                    }
+                    1 -> {
+                        tvQuestEmoji.text = "📚"
+                        tvQuestEmoji.setBackgroundResource(R.drawable.bg_quest_icon_yellow)
+                    }
+                    else -> {
+                        tvQuestEmoji.text = "💡"
+                        tvQuestEmoji.setBackgroundResource(R.drawable.bg_quest_icon_green)
+                    }
+                }
+                
+                // 2. 상태에 따른 박스 테두리 및 액션 영역 설정
                 if (quest.isCompleted) {
+                    root.setBackgroundResource(R.drawable.bg_quest_item_inactive) // 완료된 건 어두운 테두리
                     ivCompleted.visibility = View.VISIBLE
+                    ivCompleted.setImageResource(R.drawable.bg_quest_completed_check) // 시안과 동일한 체크 박스
                     tvStartBtn.visibility = View.GONE
                 } else {
+                    root.setBackgroundResource(R.drawable.bg_quest_item_active) // 진행 중인 건 선명한 파란 테두리
                     ivCompleted.visibility = View.GONE
                     tvStartBtn.visibility = if (quest.canStart) View.VISIBLE else View.GONE
                 }
