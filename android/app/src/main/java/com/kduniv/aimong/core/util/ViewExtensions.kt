@@ -1,8 +1,11 @@
 package com.kduniv.aimong.core.util
 
 import android.annotation.SuppressLint
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.view.MotionEvent
 import android.view.View
+import android.widget.TextView
 
 @SuppressLint("ClickableViewAccessibility")
 fun View.setOnScaleTouchListener() {
@@ -16,5 +19,25 @@ fun View.setOnScaleTouchListener() {
             }
         }
         false
+    }
+}
+
+/**
+ * TextView에 수평 그라데이션 효과를 적용합니다.
+ */
+fun TextView.setGradientText(vararg colors: Int) {
+    this.post {
+        val paint = this.paint
+        val width = paint.measureText(this.text.toString())
+        if (width <= 0) return@post
+        
+        val shader = LinearGradient(
+            0f, 0f, width, 0f,
+            colors,
+            null,
+            Shader.TileMode.CLAMP
+        )
+        this.paint.shader = shader
+        this.invalidate()
     }
 }

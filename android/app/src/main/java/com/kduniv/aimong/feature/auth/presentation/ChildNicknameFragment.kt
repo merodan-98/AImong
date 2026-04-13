@@ -1,0 +1,47 @@
+package com.kduniv.aimong.feature.auth.presentation
+
+import androidx.lifecycle.lifecycleScope
+import com.kduniv.aimong.core.local.SessionManager
+import com.kduniv.aimong.core.ui.BaseFragment
+import com.kduniv.aimong.core.util.setOnScaleTouchListener
+import com.kduniv.aimong.databinding.FragmentChildNicknameBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@AndroidEntryPoint
+class ChildNicknameFragment : BaseFragment<FragmentChildNicknameBinding>(FragmentChildNicknameBinding::inflate) {
+
+    @Inject
+    lateinit var sessionManager: SessionManager
+
+    override fun initView() {
+        binding.btnBack.setOnClickListener {
+            activity?.onBackPressedDispatcher?.onBackPressed()
+        }
+
+        binding.btnComplete.apply {
+            setOnScaleTouchListener()
+            setOnClickListener {
+                val nickname = binding.etNickname.text.toString()
+                if (nickname.isNotEmpty()) {
+                    // [수정] 자녀 닉네임 설정이므로 CHILD 역할로 저장
+                    saveRoleAndRestart("CHILD")
+                }
+            }
+        }
+    }
+
+    override fun initObserver() {}
+
+    private fun saveRoleAndRestart(role: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            sessionManager.saveSession(role, 1, "child_test_token")
+            val intent = android.content.Intent(requireContext(), com.kduniv.aimong.MainActivity::class.java).apply {
+                addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                putExtra("IS_RESTART", true)
+            }
+            startActivity(intent)
+        }
+    }
+}

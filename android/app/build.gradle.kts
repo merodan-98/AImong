@@ -94,8 +94,7 @@ dependencies {
     implementation(libs.mlkit.entity.extraction)
     implementation(libs.mlkit.text.recognition.korean)
 
-    // 직접 문자열 선언으로 카탈로그 꼬임 방지
-    api("com.airbnb.android:lottie:6.6.2")
+    implementation(libs.lottie.android)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play.services)
